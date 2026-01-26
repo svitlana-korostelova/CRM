@@ -76,11 +76,40 @@ See [`.specify/memory/constitution.md`](.specify/memory/constitution.md) for the
 6. **Performance & Scalability** - Handle growth from small to medium businesses
 7. **Simplicity & Maintainability** - YAGNI principles, clear code structure
 
+## Development Workflow
+
+### Story-by-Story Development
+
+1. **Create Epic Branch**: Start with `epic/###-epic-name` from `main`
+2. **Create Feature Branch**: Create `epic/###-epic-name/feature/###-feature-name` for each story
+3. **Develop with TDD**: Write tests first, then implement (Red-Green-Refactor)
+4. **Verify Compilation**: Ensure code builds with Metro bundler and runs on iOS simulator
+5. **Get Review**: Communicate story completion and wait for review approval
+6. **Commit & Push**: After approval, commit and push to remote
+7. **Update Tasks**: Mark completed tasks in `tasks.md` with `[x]`
+
+See [BRANCHING_STRATEGY.md](BRANCHING_STRATEGY.md) for detailed branching guidelines.
+
+### Task Management
+
+- Each feature has a `tasks.md` file with checkboxes
+- Tasks are organized by user story
+- Mark tasks complete with `[x]` as work progresses
+- Tasks.md is committed with code changes
+
+### TDD Approach
+
+- **Red**: Write tests first, see them fail
+- **Green**: Implement to make tests pass
+- **Refactor**: Improve code while keeping tests green
+- All business logic must follow TDD
+
 ## Getting Started
 
 1. Review the [constitution](.specify/memory/constitution.md)
-2. Start with `/speckit.specify` to create your first feature specification
-3. Follow the spec-driven development workflow
+2. Review the [branching strategy](BRANCHING_STRATEGY.md)
+3. Start with `/speckit.specify` to create your first feature specification
+4. Follow the spec-driven development workflow
 
 ## Development Phases
 
