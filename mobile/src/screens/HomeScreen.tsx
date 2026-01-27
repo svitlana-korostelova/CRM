@@ -7,11 +7,18 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
 import {Text, Card, Button} from 'react-native-paper';
+import {useSelector, useDispatch} from 'react-redux';
 import {databaseService} from '../database/database';
+import {increment, decrement, setMessage, reset} from '../store/slices/appSlice';
+import type {RootState} from '../store/store';
 
 export const HomeScreen: React.FC = () => {
   const [dbStatus, setDbStatus] = useState<string>('Checking...');
   const [testResult, setTestResult] = useState<string>('');
+
+  // Redux state
+  const {counter, message, lastUpdated} = useSelector((state: RootState) => state.app);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // Check database status on mount
@@ -90,6 +97,60 @@ export const HomeScreen: React.FC = () => {
             </Text>
           </View>
 
+          {/* Redux State Display */}
+          <View style={styles.reduxContainer}>
+            <Text variant="labelMedium" style={styles.reduxTitle}>
+              Redux State Test:
+            </Text>
+            <View style={styles.reduxRow}>
+              <Text variant="bodySmall">Counter: </Text>
+              <Text variant="bodySmall" style={styles.counterValue}>
+                {counter}
+              </Text>
+            </View>
+            <View style={styles.reduxRow}>
+              <Text variant="bodySmall">Message: </Text>
+              <Text variant="bodySmall" style={styles.messageValue}>
+                {message}
+              </Text>
+            </View>
+            {lastUpdated && (
+              <Text variant="bodySmall" style={styles.timestamp}>
+                Updated: {new Date(lastUpdated).toLocaleTimeString()}
+              </Text>
+            )}
+            <View style={styles.reduxButtons}>
+              <Button
+                mode="outlined"
+                compact
+                onPress={() => dispatch(decrement())}
+                style={styles.reduxButton}>
+                -
+              </Button>
+              <Button
+                mode="outlined"
+                compact
+                onPress={() => dispatch(increment())}
+                style={styles.reduxButton}>
+                +
+              </Button>
+              <Button
+                mode="outlined"
+                compact
+                onPress={() => dispatch(setMessage('Redux works! 🎉'))}
+                style={styles.reduxButton}>
+                Set Msg
+              </Button>
+              <Button
+                mode="outlined"
+                compact
+                onPress={() => dispatch(reset())}
+                style={styles.reduxButton}>
+                Reset
+              </Button>
+            </View>
+          </View>
+
           {testResult ? (
             <Text variant="bodySmall" style={styles.testResult}>
               {testResult}
@@ -151,6 +212,46 @@ const styles = StyleSheet.create({
     backgroundColor: '#e8f5e9',
     borderRadius: 4,
     textAlign: 'center',
+  },
+  reduxContainer: {
+    marginTop: 16,
+    padding: 12,
+    backgroundColor: '#e3f2fd',
+    borderRadius: 8,
+  },
+  reduxTitle: {
+    fontWeight: '700',
+    marginBottom: 8,
+    color: '#1976d2',
+  },
+  reduxRow: {
+    flexDirection: 'row',
+    marginBottom: 4,
+    alignItems: 'center',
+  },
+  counterValue: {
+    fontWeight: '700',
+    color: '#2196F3',
+    fontSize: 16,
+  },
+  messageValue: {
+    fontWeight: '600',
+    color: '#333',
+    flex: 1,
+  },
+  timestamp: {
+    marginTop: 4,
+    fontSize: 10,
+    color: '#666',
+    fontStyle: 'italic',
+  },
+  reduxButtons: {
+    flexDirection: 'row',
+    marginTop: 8,
+    gap: 8,
+  },
+  reduxButton: {
+    flex: 1,
   },
   actions: {
     justifyContent: 'space-between',
