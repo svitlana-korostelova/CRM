@@ -36,6 +36,15 @@ export const HomeScreen: React.FC = () => {
     checkDatabase();
   }, []);
 
+  // Log Redux state changes
+  useEffect(() => {
+    console.log('HomeScreen: Redux state updated -', {
+      counter,
+      message,
+      lastUpdated: lastUpdated ? new Date(lastUpdated).toLocaleTimeString() : null,
+    });
+  }, [counter, message, lastUpdated]);
+
   const testDatabase = async () => {
     try {
       console.log('HomeScreen: Testing database operations...');
@@ -123,28 +132,44 @@ export const HomeScreen: React.FC = () => {
               <Button
                 mode="outlined"
                 compact
-                onPress={() => dispatch(decrement())}
+                onPress={() => {
+                  console.log('HomeScreen: Decrement button pressed');
+                  dispatch(decrement());
+                  console.log('HomeScreen: Counter after decrement:', counter - 1);
+                }}
                 style={styles.reduxButton}>
                 -
               </Button>
               <Button
                 mode="outlined"
                 compact
-                onPress={() => dispatch(increment())}
+                onPress={() => {
+                  console.log('HomeScreen: Increment button pressed');
+                  dispatch(increment());
+                  console.log('HomeScreen: Counter after increment:', counter + 1);
+                }}
                 style={styles.reduxButton}>
                 +
               </Button>
               <Button
                 mode="outlined"
                 compact
-                onPress={() => dispatch(setMessage('Redux works! 🎉'))}
+                onPress={() => {
+                  console.log('HomeScreen: Set Message button pressed');
+                  dispatch(setMessage('Redux works! 🎉'));
+                  console.log('HomeScreen: Message updated to: Redux works! 🎉');
+                }}
                 style={styles.reduxButton}>
                 Set Msg
               </Button>
               <Button
                 mode="outlined"
                 compact
-                onPress={() => dispatch(reset())}
+                onPress={() => {
+                  console.log('HomeScreen: Reset button pressed');
+                  dispatch(reset());
+                  console.log('HomeScreen: State reset to initial values');
+                }}
                 style={styles.reduxButton}>
                 Reset
               </Button>
