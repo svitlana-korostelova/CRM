@@ -4,11 +4,72 @@
  * Main landing screen for the CRM application
  */
 
-import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet, Alert} from 'react-native';
 import {Text, Card, Button} from 'react-native-paper';
+import {databaseService} from '../database/database';
 
 export const HomeScreen: React.FC = () => {
+  const [dbStatus, setDbStatus] = useState<string>('Checking...');
+  const [testResult, setTestResult] = useState<string>('');
+
+  useEffect(() => {
+    // Check database status on mount
+    const checkDatabase = async () => {
+      try {
+        const isReady = databaseService.isReady();
+        setDbStatus(isReady ? '✅ Connected' : '❌ Not Ready');
+        console.log('HomeScreen: Database status checked -', isReady);
+      } catch (error) {
+        setDbStatus('❌ Error');
+        console.error('HomeScreen: Database check failed:', error);
+      }
+    };
+
+    checkDatabase();
+  }, []);
+
+  const testDatabase = async () => {
+    try {
+      console.log('HomeScreen: Testing database operations...');
+      
+      // Test insert
+      const id = await databaseService.insert('test_table', {
+        name: 'Test Record',
+        value: `Test at ${new Date().toISOString()}`,
+      });
+      console.log('HomeScreen: Inserted record with ID:', id);
+
+      // Test query
+      const records = await databaseService.select('test_table', 'id = ?', [id]);
+      console.log('HomeScreen: Queried records:', records);
+
+      // Test update
+      const updated = await databaseService.update(
+        'test_table',
+        {value: 'Updated value'},
+        'id = ?',
+        [id]
+      );
+      console.log('HomeScreen: Updated rows:', updated);
+
+      // Test query again
+      const updatedRecord = await databaseService.select('test_table', 'id = ?', [id]);
+      console.log('HomeScreen: Updated record:', updatedRecord);
+
+      setTestResult(`✅ Success! Record ID: ${id}, Updated: ${updated} row(s)`);
+      Alert.alert(
+        'Database Test',
+        `✅ Database operations successful!\n\nInserted ID: ${id}\nUpdated: ${updated} row(s)\n\nCheck Metro bundler terminal for detailed logs.`,
+        [{text: 'OK'}]
+      );
+    } catch (error) {
+      console.error('HomeScreen: Database test failed:', error);
+      setTestResult('❌ Error: ' + (error instanceof Error ? error.message : String(error)));
+      Alert.alert('Database Test Failed', String(error), [{text: 'OK'}]);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Card style={styles.card}>
@@ -19,8 +80,26 @@ export const HomeScreen: React.FC = () => {
           <Text variant="bodyMedium" style={styles.subtitle}>
             Your mobile-first customer relationship management system
           </Text>
+          
+          <View style={styles.statusContainer}>
+            <Text variant="bodySmall" style={styles.statusLabel}>
+              Database Status:
+            </Text>
+            <Text variant="bodySmall" style={styles.statusValue}>
+              {dbStatus}
+            </Text>
+          </View>
+
+          {testResult ? (
+            <Text variant="bodySmall" style={styles.testResult}>
+              {testResult}
+            </Text>
+          ) : null}
         </Card.Content>
-        <Card.Actions>
+        <Card.Actions style={styles.actions}>
+          <Button mode="outlined" onPress={testDatabase} style={styles.testButton}>
+            Test Database
+          </Button>
           <Button mode="contained" onPress={() => {}}>
             Get Started
           </Button>
@@ -48,5 +127,36 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#666',
     marginBottom: 16,
+  },
+  statusContainer: {
+    marginTop: 16,
+    padding: 12,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  statusLabel: {
+    fontWeight: '600',
+    color: '#333',
+  },
+  statusValue: {
+    fontWeight: '700',
+    color: '#2196F3',
+  },
+  testResult: {
+    marginTop: 8,
+    padding: 8,
+    backgroundColor: '#e8f5e9',
+    borderRadius: 4,
+    textAlign: 'center',
+  },
+  actions: {
+    justifyContent: 'space-between',
+    paddingHorizontal: 8,
+  },
+  testButton: {
+    marginRight: 8,
   },
 });
