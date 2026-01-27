@@ -28,8 +28,8 @@
 - [x] T001 Verify mobile app structure exists in mobile/ directory
 - [x] T002 Verify Redux Toolkit and RTK Query are configured in mobile/src/store/
 - [x] T003 Verify React Navigation is set up in mobile/src/navigation/
-- [x] T004 Verify mobile app builds successfully with `npm run ios`
-- [x] T005 Verify mobile app runs on iOS simulator without errors
+- [x] T004 Verify mobile app builds successfully with `npm run ios` and `npm run android`
+- [x] T005 Verify mobile app runs on iOS simulator and Android emulator without errors
 - [x] T006 [P] Review mobile/package.json dependencies and verify all are installed
 
 **Checkpoint**: Mobile app foundation verified and working
