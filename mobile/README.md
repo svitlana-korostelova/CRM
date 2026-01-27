@@ -48,10 +48,17 @@ npm run ios
 ```
 mobile/
 ├── src/
-│   ├── navigation/      # Navigation configuration
+│   ├── navigation/       # Navigation configuration
 │   ├── screens/          # Screen components
 │   ├── store/            # Redux store and API
-│   └── theme/            # Theme configuration
+│   │   ├── api/         # RTK Query API
+│   │   └── slices/      # Redux slices
+│   ├── database/         # SQLite database service
+│   │   ├── database.ts   # Database initialization
+│   │   ├── migrations/   # Database migrations
+│   │   └── models/       # Database models/types
+│   ├── theme/            # Theme configuration
+│   └── types/            # TypeScript types
 ├── ios/                  # iOS native code
 ├── App.tsx               # App entry point
 └── package.json
