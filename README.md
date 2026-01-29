@@ -116,7 +116,101 @@ See [BRANCHING_STRATEGY.md](BRANCHING_STRATEGY.md) for detailed branching guidel
 - **Refactor**: Improve code while keeping tests green
 - All business logic must follow TDD
 
-## Getting Started
+## Quick Start: Running the Application
+
+### Prerequisites
+- Node.js 18+ installed
+- Xcode (for iOS development)
+- PostgreSQL database (local, Supabase, or other provider)
+
+### Running Backend
+
+1. **Navigate to backend directory:**
+   ```bash
+   cd backend
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Configure environment:**
+   Create `.env` file:
+   ```env
+   PORT=3000
+   NODE_ENV=development
+   DATABASE_URL="postgresql://user:password@localhost:5432/crm?schema=public"
+   ```
+
+4. **Generate Prisma Client:**
+   ```bash
+   npm run prisma:generate
+   ```
+
+5. **Start backend server:**
+   ```bash
+   npm run dev
+   ```
+
+6. **Verify backend is running:**
+   - Server should show: `🚀 Server running on http://localhost:3000`
+   - Test health endpoint: `curl http://localhost:3000/api/health`
+   - Or open in browser: `http://localhost:3000/api/health`
+
+### Running Mobile App
+
+1. **Navigate to mobile directory:**
+   ```bash
+   cd mobile
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Install iOS dependencies:**
+   ```bash
+   cd ios
+   pod install
+   cd ..
+   ```
+
+4. **Start Metro bundler:**
+   ```bash
+   npm start
+   ```
+   (Keep this terminal open)
+
+5. **In a new terminal, run iOS app:**
+   ```bash
+   cd mobile
+   npm run ios
+   ```
+
+### Verifying Everything Works
+
+**Backend Check:**
+```bash
+# Check if backend is running
+curl http://localhost:3000/api/health
+
+# Expected response:
+# {"status":"ok","timestamp":"...","uptime":123,"database":"connected"}
+```
+
+**Mobile App Check:**
+- iOS Simulator should open
+- App should display without errors
+- Check Metro bundler terminal for any errors
+
+**Connection Check:**
+- Mobile app is configured to connect to `http://localhost:3000/api` in development
+- Ensure backend is running before starting mobile app
+- Check network requests in Metro bundler logs
+
+## Getting Started with Development
 
 1. Review the [constitution](.specify/memory/constitution.md)
 2. Review the [branching strategy](BRANCHING_STRATEGY.md)

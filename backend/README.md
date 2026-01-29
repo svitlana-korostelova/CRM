@@ -43,6 +43,14 @@ Backend API server for the CRM mobile application. Built with Node.js, Express, 
 npm run dev
 ```
 
+**Expected output:**
+```
+✅ Database connected successfully
+🚀 Server running on http://localhost:3000
+📊 Environment: development
+🔗 Health check: http://localhost:3000/api/health
+```
+
 ### Production Mode:
 ```bash
 npm run build
@@ -50,6 +58,37 @@ npm start
 ```
 
 The server will start on `http://localhost:3000` (or the port specified in your `.env` file).
+
+## Verifying Backend is Running
+
+### Quick Check:
+```bash
+# Test health endpoint
+curl http://localhost:3000/api/health
+
+# Expected response:
+# {"status":"ok","timestamp":"2025-01-27T...","uptime":123.45,"database":"connected"}
+```
+
+### Browser Check:
+Open `http://localhost:3000/api/health` in your browser.
+
+### Check Server Logs:
+Look for these messages in the terminal:
+- ✅ `Database connected successfully`
+- ✅ `Server running on http://localhost:3000`
+
+### Troubleshooting:
+
+**Backend won't start:**
+- Check if port 3000 is already in use: `lsof -i :3000`
+- Verify `.env` file exists and has correct `DATABASE_URL`
+- Check database connection: `npm run prisma:generate` should succeed
+
+**Database connection fails:**
+- Verify PostgreSQL is running (if local)
+- Check `DATABASE_URL` in `.env` is correct
+- Test connection: `psql $DATABASE_URL` (if psql is installed)
 
 ## API Endpoints
 

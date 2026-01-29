@@ -3,22 +3,29 @@ import { prisma } from '../config/database';
 
 const router = Router();
 
-router.get('/health', async (req: Request, res: Response) => {
+const DB_CHECK_TIMEOUT_MS = 5000;
+
+router.get('/', async (req: Request, res: Response) => {
+  const base = {
+    status: 'ok' as const,
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+  };
+
   try {
-    // Check database connection
-    await prisma.$queryRaw`SELECT 1`;
-    
-    res.status(200).json({
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
-      database: 'connected',
-    });
+    const dbCheck = prisma.$queryRaw`SELECT 1`;
+    const timeout = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('timeout')), DB_CHECK_TIMEOUT_MS)
+    );
+    await Promise.race([dbCheck, timeout]);
+
+    res.status(200).json({ ...base, database: 'connected' });
   } catch (error) {
-    res.status(503).json({
+    const isTimeout = error instanceof Error && error.message === 'timeout';
+    res.status(isTimeout ? 503 : 503).json({
+      ...base,
       status: 'error',
-      timestamp: new Date().toISOString(),
-      database: 'disconnected',
+      database: isTimeout ? 'timeout' : 'disconnected',
       error: error instanceof Error ? error.message : 'Unknown error',
     });
   }

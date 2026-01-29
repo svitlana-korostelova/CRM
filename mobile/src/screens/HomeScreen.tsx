@@ -9,12 +9,14 @@ import {View, StyleSheet, Alert} from 'react-native';
 import {Text, Card, Button} from 'react-native-paper';
 import {useSelector, useDispatch} from 'react-redux';
 import {databaseService} from '../database/database';
+import {BASE_URL} from '../store/api/api';
 import {increment, decrement, setMessage, reset} from '../store/slices/appSlice';
 import type {RootState} from '../store/store';
 
 export const HomeScreen: React.FC = () => {
   const [dbStatus, setDbStatus] = useState<string>('Checking...');
   const [testResult, setTestResult] = useState<string>('');
+  const [backendResult, setBackendResult] = useState<string>('');
 
   // Redux state
   const {counter, message, lastUpdated} = useSelector((state: RootState) => state.app);
@@ -83,6 +85,39 @@ export const HomeScreen: React.FC = () => {
       console.error('HomeScreen: Database test failed:', error);
       setTestResult('❌ Error: ' + (error instanceof Error ? error.message : String(error)));
       Alert.alert('Database Test Failed', String(error), [{text: 'OK'}]);
+    }
+  };
+
+  const sendToBackend = async () => {
+    try {
+      setBackendResult('Sending...');
+      const mockData = {
+        source: 'CRM Mobile App',
+        message: 'Hello from mobile!',
+        timestamp: new Date().toISOString(),
+        counter,
+      };
+      const res = await fetch(`${BASE_URL}/echo`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(mockData),
+      });
+      const json = await res.json();
+      setBackendResult(res.ok ? `✅ ${json.message}` : `❌ ${res.status}`);
+      Alert.alert(
+        'Backend Test',
+        res.ok
+          ? `Backend received your data!\n\nCheck the backend terminal to see:\n📱 Received from mobile: { ... }`
+          : `Request failed: ${res.status}`,
+        [{text: 'OK'}]
+      );
+    } catch (error) {
+      setBackendResult('❌ Error');
+      Alert.alert(
+        'Backend Test Failed',
+        `Could not reach backend. Is it running on ${BASE_URL.replace(/\/api\/?$/, '')}?`,
+        [{text: 'OK'}]
+      );
     }
   };
 
@@ -181,10 +216,18 @@ export const HomeScreen: React.FC = () => {
               {testResult}
             </Text>
           ) : null}
+          {backendResult ? (
+            <Text variant="bodySmall" style={styles.testResult}>
+              Backend: {backendResult}
+            </Text>
+          ) : null}
         </Card.Content>
         <Card.Actions style={styles.actions}>
           <Button mode="outlined" onPress={testDatabase} style={styles.testButton}>
             Test Database
+          </Button>
+          <Button mode="outlined" onPress={sendToBackend} style={styles.testButton}>
+            Send to Backend
           </Button>
           <Button mode="contained" onPress={() => {}}>
             Get Started

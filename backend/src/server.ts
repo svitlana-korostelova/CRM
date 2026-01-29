@@ -1,12 +1,11 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express, { Express } from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { connectDatabase, disconnectDatabase } from './config/database';
 import apiRouter from './routes/api';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
-
-// Load environment variables
-dotenv.config();
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
