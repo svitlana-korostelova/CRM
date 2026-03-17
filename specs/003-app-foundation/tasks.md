@@ -125,15 +125,15 @@
 - [x] T046 [US4] Create Prisma schema in backend/prisma/schema.prisma
 - [x] T047 [US4] Configure PostgreSQL database connection in Prisma schema
 - [x] T048 [US4] Create database connection service in backend/src/config/database.ts
-- [ ] T049 [US4] Verify backend server can connect to PostgreSQL database (requires PostgreSQL instance)
+- [ ] T049 [US4] Verify backend connects to PostgreSQL and starts successfully (`npm start`, health check responds on GET /api/health)
 - [x] T050 [US4] Create backend/src/routes/ directory for API routes
 - [x] T051 [US4] Create health check endpoint (GET /api/health) in backend/src/routes/health.ts
-- [ ] T052 [US4] Test health check endpoint responds correctly (requires server running)
+- [x] T052 [US4] ~~Test health check endpoint responds correctly~~ (merged into T049)
 - [x] T053 [US4] Create API route structure in backend/src/routes/api.ts
 - [x] T054 [US4] Add error handling middleware in backend/src/middleware/errorHandler.ts
 - [x] T055 [US4] Add CORS middleware for mobile app requests
 - [x] T056 [US4] Create backend/README.md with setup and run instructions
-- [ ] T057 [US4] Verify backend server starts and runs successfully (requires PostgreSQL instance)
+- [x] T057 [US4] ~~Verify backend server starts and runs successfully~~ (merged into T049)
 
 **Checkpoint**: At this point, User Story 4 backend API should be fully functional and ready for CRM endpoints
 
@@ -152,9 +152,9 @@
 - [x] T060 [US5] Test app interaction (navigate, use components) without crashes (verified - app runs)
 - [x] T061 [US5] Verify Metro bundler detects code changes and rebuilds automatically (verified during development)
 - [x] T062 [US5] Test build error handling - introduce error and verify clear error messages (TypeScript/linter catches errors)
-- [ ] T063 [US5] Verify backend server builds without errors: `cd backend && npm run build` (P2 - backend not implemented yet)
-- [ ] T064 [US5] Verify backend server starts without errors: `cd backend && npm start` (P2 - backend not implemented yet)
-- [ ] T065 [US5] Test backend API endpoint responds correctly (P2 - backend not implemented yet)
+- [ ] T063 [US5] Verify backend builds (`npm run build`) and starts (`npm start`) without errors
+- [x] T064 [US5] ~~Verify backend server starts without errors~~ (merged into T063)
+- [x] T065 [US5] ~~Test backend API endpoint responds correctly~~ (covered by T049)
 - [x] T066 [US5] Create pre-commit verification script or documentation (documented in workflow)
 - [x] T067 [US5] Document build and run verification process in README.md (documented)
 
@@ -164,88 +164,24 @@
 
 ## Phase 7: Polish & Integration
 
-**Purpose**: Finalize foundation, integration between mobile and backend, and documentation
+**Purpose**: Connect mobile to backend, finalize configuration and documentation
 
-- [ ] T068 [P] Update mobile app to connect to backend API (update BASE_URL in RTK Query)
-- [ ] T069 [P] Test mobile app can make API requests to backend health endpoint
-- [ ] T070 [P] Create environment configuration for development vs production
-- [ ] T071 [P] Add error handling for network requests in mobile app
-- [ ] T072 [P] Create setup documentation in specs/003-app-foundation/quickstart.md
-- [ ] T073 [P] Verify all documentation is complete and accurate
-- [ ] T074 [P] Code cleanup and refactoring
-- [ ] T075 [P] Review and optimize build times
+- [ ] T068 [P] Connect mobile app to backend API: update BASE_URL in RTK Query, add network error handling, test health endpoint call
+- [ ] T069 [P] Create dev/prod environment configuration (`.env` files, config switching)
+- [ ] T070 [P] Final documentation pass: quickstart.md, verify README accuracy, code cleanup
 
 ---
 
-## Dependencies & Execution Order
+## Remaining Work Summary
 
-### Phase Dependencies
+**5 tasks remain** (consolidated from original 14):
 
-- **Setup (Phase 1)**: No dependencies - can start immediately
-- **User Story 1 (Phase 2)**: Depends on Setup completion - Verifies existing foundation
-- **User Story 2 (Phase 3)**: Can start after User Story 1 - Mostly done, needs verification
-- **User Story 3 (Phase 4)**: Can start after User Story 1 - CRITICAL for offline-first
-- **User Story 4 (Phase 5)**: Can run in parallel with User Story 3 - Independent backend work
-- **User Story 5 (Phase 6)**: Depends on all previous stories - Final verification
-- **Polish (Phase 7)**: Depends on all user stories being complete
+| Task | Depends On | Description |
+|------|-----------|-------------|
+| T049 | PostgreSQL running | Backend + DB connection + health check verification |
+| T063 | T049 | Backend TypeScript build verification |
+| T068 | T049 | Mobile-to-backend integration (RTK Query + error handling) |
+| T069 | T068 | Dev/prod environment configuration |
+| T070 | All above | Documentation and cleanup pass |
 
-### User Story Dependencies
-
-- **User Story 1 (P1)**: Foundation - Must be verified first
-- **User Story 2 (P1)**: Can verify independently, mostly already done
-- **User Story 3 (P1)**: CRITICAL - Blocks all CRM features, should be done early
-- **User Story 4 (P2)**: Can be done in parallel with User Story 3
-- **User Story 5 (P1)**: Final verification - depends on all stories
-
-### Within Each User Story
-
-- Database setup before database operations
-- Server setup before API endpoints
-- Configuration before implementation
-- Core functionality before integration
-- Story complete before moving to next priority
-
-### Parallel Opportunities
-
-- User Story 3 (SQLite) and User Story 4 (Backend) can run in parallel
-- Documentation tasks marked [P] can run in parallel
-- Testing tasks can run in parallel with implementation
-
----
-
-## Implementation Strategy
-
-### MVP First (Critical Foundation)
-
-1. Complete Phase 1: Setup verification
-2. Complete Phase 2: User Story 1 (Mobile foundation verification)
-3. Complete Phase 4: User Story 3 (SQLite database) - CRITICAL for offline-first
-4. **STOP and VALIDATE**: Test database works independently
-5. Then proceed with backend and remaining stories
-
-### Incremental Delivery
-
-1. Verify mobile foundation → Mobile app works
-2. Add SQLite database → Offline storage works (MVP for offline-first!)
-3. Add backend API → Sync capability ready
-4. Final verification → Everything compiles and runs
-
-### Priority Order
-
-1. **P1 - User Story 1**: Verify mobile app builds and runs (foundation)
-2. **P1 - User Story 3**: SQLite database setup (CRITICAL - blocks CRM features)
-3. **P1 - User Story 2**: Verify state management works
-4. **P1 - User Story 5**: Build verification
-5. **P2 - User Story 4**: Backend API (can be done in parallel)
-
----
-
-## Notes
-
-- [P] tasks = different files, no dependencies
-- [Story] label maps task to specific user story for traceability
-- User Story 3 (SQLite) is CRITICAL - must be done before any CRM features
-- Backend (User Story 4) is P2 - important but not blocking mobile development
-- All committed code must compile and run successfully (User Story 5)
-- Focus on getting foundation working, then add tests incrementally
-- Verify each story independently before moving to next
+**Execution**: T049 → T063 → T068 → T069/T070 (parallel)
