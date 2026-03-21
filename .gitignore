@@ -62,6 +62,13 @@ yarn-error.*
 *.temp
 .cache/
 
+# Claude Code hook logs
+pre-log.json
+post-log.json
+
+# Claude Code local settings (personal, not for team)
+.claude/settings.local.json
+
 # Logs
 logs/
 *.log

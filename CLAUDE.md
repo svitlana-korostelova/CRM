@@ -210,3 +210,7 @@ CRM/
 - Architecture decisions affecting multiple layers
 
 ---
+
+## 📝 USER INSTRUCTIONS
+
+- Always use strict TypeScript — no implicit `any`
