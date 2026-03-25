@@ -16,10 +16,10 @@
 
 **Purpose**: Install dependencies, create directory structure, configure shared types
 
-- [ ] T001 Install `@react-navigation/bottom-tabs` and `@react-native-community/netinfo` in `mobile/package.json` and run `cd mobile/ios && pod install`
-- [ ] T002 Create directory structure: `mobile/src/navigation/stacks/`, `mobile/src/screens/dashboard/`, `mobile/src/screens/clients/`, `mobile/src/screens/deals/`, `mobile/src/screens/activities/`, `mobile/src/screens/more/`, `mobile/src/screens/search/`, `mobile/src/components/`
-- [ ] T003 [P] Create shared TypeScript types file at `mobile/src/navigation/types.ts` — define `RootStackParamList`, `RootTabParamList`, `DashboardStackParamList`, `ClientsStackParamList`, `DealsStackParamList`, `ActivitiesStackParamList`, `MoreStackParamList`, and shared enums (`ActivityType`, `FormMode`, `Priority`, `TaskStatus`, `CallOutcome`) per data-model.md
-- [ ] T004 [P] Create database model types at `mobile/src/database/models/client.ts`, `mobile/src/database/models/deal.ts`, `mobile/src/database/models/task.ts`, `mobile/src/database/models/callLog.ts`, `mobile/src/database/models/note.ts`, `mobile/src/database/models/meeting.ts` — define TypeScript interfaces matching the SQLite schema in data-model.md, and re-export all from `mobile/src/database/models/index.ts`
+- [x] T001 Install `@react-navigation/bottom-tabs` and `@react-native-community/netinfo` in `mobile/package.json` and run `cd mobile/ios && pod install`
+- [x] T002 Create directory structure: `mobile/src/navigation/stacks/`, `mobile/src/screens/dashboard/`, `mobile/src/screens/clients/`, `mobile/src/screens/deals/`, `mobile/src/screens/activities/`, `mobile/src/screens/more/`, `mobile/src/screens/search/`, `mobile/src/components/`
+- [x] T003 [P] Create shared TypeScript types file at `mobile/src/navigation/types.ts` — define `RootStackParamList`, `RootTabParamList`, `DashboardStackParamList`, `ClientsStackParamList`, `DealsStackParamList`, `ActivitiesStackParamList`, `MoreStackParamList`, and shared enums (`ActivityType`, `FormMode`, `Priority`, `TaskStatus`, `CallOutcome`) per data-model.md
+- [x] T004 [P] Create database model types at `mobile/src/database/models/client.ts`, `mobile/src/database/models/deal.ts`, `mobile/src/database/models/task.ts`, `mobile/src/database/models/callLog.ts`, `mobile/src/database/models/note.ts`, `mobile/src/database/models/meeting.ts` — define TypeScript interfaces matching the SQLite schema in data-model.md, and re-export all from `mobile/src/database/models/index.ts`
 
 **Checkpoint**: Dependencies installed, directories created, all TypeScript types defined
 
