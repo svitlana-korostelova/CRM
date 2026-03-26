@@ -1,4 +1,4 @@
-import type {CallOutcome} from '@/navigation/types';
+import type {CallOutcome} from '../../navigation/types';
 
 /**
  * Row shape for the `call_logs` SQLite table (see data-model.md).

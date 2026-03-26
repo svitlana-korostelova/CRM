@@ -1,7 +1,8 @@
 /**
- * Home Screen
- * 
- * Main landing screen for the CRM application
+ * Legacy dev / dummy testing screen (database, Redux, backend echo).
+ *
+ * Not part of the production tab UX. It is only mounted from `DashboardScreen` when
+ * `DEV_TEST` is true — see `src/config/devFlags.ts` and `DashboardScreen.tsx`.
  */
 
 import React, {useState, useEffect} from 'react';
@@ -10,7 +11,12 @@ import {Text, Card, Button} from 'react-native-paper';
 import {useSelector, useDispatch} from 'react-redux';
 import {databaseService} from '../database/database';
 import {BASE_URL} from '../store/api/api';
-import {increment, decrement, setMessage, reset} from '../store/slices/appSlice';
+import {
+  increment,
+  decrement,
+  setMessage,
+  reset,
+} from '../store/slices/appSlice';
 import type {RootState} from '../store/store';
 
 export const HomeScreen: React.FC = () => {
@@ -19,7 +25,9 @@ export const HomeScreen: React.FC = () => {
   const [backendResult, setBackendResult] = useState<string>('');
 
   // Redux state
-  const {counter, message, lastUpdated} = useSelector((state: RootState) => state.app);
+  const {counter, message, lastUpdated} = useSelector(
+    (state: RootState) => state.app,
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -43,14 +51,16 @@ export const HomeScreen: React.FC = () => {
     console.log('HomeScreen: Redux state updated -', {
       counter,
       message,
-      lastUpdated: lastUpdated ? new Date(lastUpdated).toLocaleTimeString() : null,
+      lastUpdated: lastUpdated
+        ? new Date(lastUpdated).toLocaleTimeString()
+        : null,
     });
   }, [counter, message, lastUpdated]);
 
   const testDatabase = async () => {
     try {
       console.log('HomeScreen: Testing database operations...');
-      
+
       // Test insert
       const id = await databaseService.insert('test_table', {
         name: 'Test Record',
@@ -59,7 +69,9 @@ export const HomeScreen: React.FC = () => {
       console.log('HomeScreen: Inserted record with ID:', id);
 
       // Test query
-      const records = await databaseService.select('test_table', 'id = ?', [id]);
+      const records = await databaseService.select('test_table', 'id = ?', [
+        id,
+      ]);
       console.log('HomeScreen: Queried records:', records);
 
       // Test update
@@ -67,23 +79,29 @@ export const HomeScreen: React.FC = () => {
         'test_table',
         {value: 'Updated value'},
         'id = ?',
-        [id]
+        [id],
       );
       console.log('HomeScreen: Updated rows:', updated);
 
       // Test query again
-      const updatedRecord = await databaseService.select('test_table', 'id = ?', [id]);
+      const updatedRecord = await databaseService.select(
+        'test_table',
+        'id = ?',
+        [id],
+      );
       console.log('HomeScreen: Updated record:', updatedRecord);
 
       setTestResult(`✅ Success! Record ID: ${id}, Updated: ${updated} row(s)`);
       Alert.alert(
         'Database Test',
         `✅ Database operations successful!\n\nInserted ID: ${id}\nUpdated: ${updated} row(s)\n\nCheck Metro bundler terminal for detailed logs.`,
-        [{text: 'OK'}]
+        [{text: 'OK'}],
       );
     } catch (error) {
       console.error('HomeScreen: Database test failed:', error);
-      setTestResult('❌ Error: ' + (error instanceof Error ? error.message : String(error)));
+      setTestResult(
+        '❌ Error: ' + (error instanceof Error ? error.message : String(error)),
+      );
       Alert.alert('Database Test Failed', String(error), [{text: 'OK'}]);
     }
   };
@@ -99,7 +117,7 @@ export const HomeScreen: React.FC = () => {
       };
       const res = await fetch(`${BASE_URL}/echo`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(mockData),
       });
       const json = await res.json();
@@ -109,14 +127,14 @@ export const HomeScreen: React.FC = () => {
         res.ok
           ? `Backend received your data!\n\nCheck the backend terminal to see:\n📱 Received from mobile: { ... }`
           : `Request failed: ${res.status}`,
-        [{text: 'OK'}]
+        [{text: 'OK'}],
       );
-    } catch (error) {
+    } catch {
       setBackendResult('❌ Error');
       Alert.alert(
         'Backend Test Failed',
         `Could not reach backend. Is it running on ${BASE_URL.replace(/\/api\/?$/, '')}?`,
-        [{text: 'OK'}]
+        [{text: 'OK'}],
       );
     }
   };
@@ -131,7 +149,7 @@ export const HomeScreen: React.FC = () => {
           <Text variant="bodyMedium" style={styles.subtitle}>
             Your mobile-first customer relationship management system
           </Text>
-          
+
           <View style={styles.statusContainer}>
             <Text variant="bodySmall" style={styles.statusLabel}>
               Database Status:
@@ -170,7 +188,10 @@ export const HomeScreen: React.FC = () => {
                 onPress={() => {
                   console.log('HomeScreen: Decrement button pressed');
                   dispatch(decrement());
-                  console.log('HomeScreen: Counter after decrement:', counter - 1);
+                  console.log(
+                    'HomeScreen: Counter after decrement:',
+                    counter - 1,
+                  );
                 }}
                 style={styles.reduxButton}>
                 -
@@ -181,7 +202,10 @@ export const HomeScreen: React.FC = () => {
                 onPress={() => {
                   console.log('HomeScreen: Increment button pressed');
                   dispatch(increment());
-                  console.log('HomeScreen: Counter after increment:', counter + 1);
+                  console.log(
+                    'HomeScreen: Counter after increment:',
+                    counter + 1,
+                  );
                 }}
                 style={styles.reduxButton}>
                 +
@@ -192,7 +216,9 @@ export const HomeScreen: React.FC = () => {
                 onPress={() => {
                   console.log('HomeScreen: Set Message button pressed');
                   dispatch(setMessage('Redux works! 🎉'));
-                  console.log('HomeScreen: Message updated to: Redux works! 🎉');
+                  console.log(
+                    'HomeScreen: Message updated to: Redux works! 🎉',
+                  );
                 }}
                 style={styles.reduxButton}>
                 Set Msg
@@ -223,10 +249,16 @@ export const HomeScreen: React.FC = () => {
           ) : null}
         </Card.Content>
         <Card.Actions style={styles.actions}>
-          <Button mode="outlined" onPress={testDatabase} style={styles.testButton}>
+          <Button
+            mode="outlined"
+            onPress={testDatabase}
+            style={styles.testButton}>
             Test Database
           </Button>
-          <Button mode="outlined" onPress={sendToBackend} style={styles.testButton}>
+          <Button
+            mode="outlined"
+            onPress={sendToBackend}
+            style={styles.testButton}>
             Send to Backend
           </Button>
           <Button mode="contained" onPress={() => {}}>

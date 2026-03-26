@@ -33,25 +33,25 @@
 
 ### Navigation Core
 
-- [ ] T005 [US1] Create `MainTabNavigator.tsx` in `mobile/src/navigation/` — Bottom tab navigator with 5 tabs (Dashboard, Clients, Deals, Activities, More) using Material Community Icons (`home`, `account-group`, `handshake`, `calendar-check`, `dots-horizontal`). Style active/inactive states with theme colors from `mobile/src/theme/theme.ts`
-- [ ] T006 [US1] Create placeholder `DashboardScreen.tsx` in `mobile/src/screens/dashboard/` — minimal screen with `<Text>Dashboard</Text>` centered, typed with `NativeStackScreenProps<DashboardStackParamList, 'Dashboard'>`
-- [ ] T007 [P] [US1] Create placeholder `ClientListScreen.tsx` in `mobile/src/screens/clients/` — minimal screen with `<Text>Clients</Text>` centered
-- [ ] T008 [P] [US1] Create placeholder `DealPipelineScreen.tsx` in `mobile/src/screens/deals/` — minimal screen with `<Text>Deals</Text>` centered
-- [ ] T009 [P] [US1] Create placeholder `ActivityListScreen.tsx` in `mobile/src/screens/activities/` — minimal screen with `<Text>Activities</Text>` centered
-- [ ] T010 [P] [US1] Create placeholder `MoreMenuScreen.tsx` in `mobile/src/screens/more/` — minimal screen with `<Text>More</Text>` centered
-- [ ] T011 [US1] Create `DashboardStack.tsx` in `mobile/src/navigation/stacks/` — native-stack navigator containing `DashboardScreen` as initial route. Use `DashboardStackParamList` types
-- [ ] T012 [P] [US1] Create `ClientsStack.tsx` in `mobile/src/navigation/stacks/` — native-stack navigator with `ClientListScreen` as initial route. Use `ClientsStackParamList` types
-- [ ] T013 [P] [US1] Create `DealsStack.tsx` in `mobile/src/navigation/stacks/` — native-stack navigator with `DealPipelineScreen` as initial route. Use `DealsStackParamList` types
-- [ ] T014 [P] [US1] Create `ActivitiesStack.tsx` in `mobile/src/navigation/stacks/` — native-stack navigator with `ActivityListScreen` as initial route. Use `ActivitiesStackParamList` types
-- [ ] T015 [P] [US1] Create `MoreStack.tsx` in `mobile/src/navigation/stacks/` — native-stack navigator with `MoreMenuScreen` as initial route. Use `MoreStackParamList` types
-- [ ] T016 [US1] Update `AppNavigator.tsx` in `mobile/src/navigation/` — replace the existing single Home stack with `RootStackParamList` root stack containing `MainTabNavigator` as the `MainTabs` screen. Add `GlobalSearch` and `QuickAction` as modal screens (placeholder for now)
+- [x] T005 [US1] Create `MainTabNavigator.tsx` in `mobile/src/navigation/` — Bottom tab navigator with 5 tabs (Dashboard, Clients, Deals, Activities, More) using Material Community Icons (`home`, `account-group`, `handshake`, `calendar-check`, `dots-horizontal`). Style active/inactive states with theme colors from `mobile/src/theme/theme.ts`
+- [x] T006 [US1] Create placeholder `DashboardScreen.tsx` in `mobile/src/screens/dashboard/` — minimal screen with `<Text>Dashboard</Text>` centered, typed with `NativeStackScreenProps<DashboardStackParamList, 'Dashboard'>`
+- [x] T007 [P] [US1] Create placeholder `ClientListScreen.tsx` in `mobile/src/screens/clients/` — minimal screen with `<Text>Clients</Text>` centered
+- [x] T008 [P] [US1] Create placeholder `DealPipelineScreen.tsx` in `mobile/src/screens/deals/` — minimal screen with `<Text>Deals</Text>` centered
+- [x] T009 [P] [US1] Create placeholder `ActivityListScreen.tsx` in `mobile/src/screens/activities/` — minimal screen with `<Text>Activities</Text>` centered
+- [x] T010 [P] [US1] Create placeholder `MoreMenuScreen.tsx` in `mobile/src/screens/more/` — minimal screen with `<Text>More</Text>` centered
+- [x] T011 [US1] Create `DashboardStack.tsx` in `mobile/src/navigation/stacks/` — native-stack navigator containing `DashboardScreen` as initial route. Use `DashboardStackParamList` types
+- [x] T012 [P] [US1] Create `ClientsStack.tsx` in `mobile/src/navigation/stacks/` — native-stack navigator with `ClientListScreen` as initial route. Use `ClientsStackParamList` types
+- [x] T013 [P] [US1] Create `DealsStack.tsx` in `mobile/src/navigation/stacks/` — native-stack navigator with `DealPipelineScreen` as initial route. Use `DealsStackParamList` types
+- [x] T014 [P] [US1] Create `ActivitiesStack.tsx` in `mobile/src/navigation/stacks/` — native-stack navigator with `ActivityListScreen` as initial route. Use `ActivitiesStackParamList` types
+- [x] T015 [P] [US1] Create `MoreStack.tsx` in `mobile/src/navigation/stacks/` — native-stack navigator with `MoreMenuScreen` as initial route. Use `MoreStackParamList` types
+- [x] T016 [US1] Update `AppNavigator.tsx` in `mobile/src/navigation/` — replace the existing single Home stack with `RootStackParamList` root stack containing `MainTabNavigator` as the `MainTabs` screen. Add `GlobalSearch` and `QuickAction` as modal screens (placeholder for now)
 
 ### Shared Components
 
-- [ ] T017 [P] [US1] Create `EmptyState.tsx` in `mobile/src/components/` — reusable component accepting `title: string`, `description: string`, `icon?: string`, `actionLabel?: string`, `onAction?: () => void`. Uses React Native Paper `Text`, `Button`, and `Icon`
-- [ ] T018 [P] [US1] Create `LoadingSkeleton.tsx` in `mobile/src/components/` — reusable skeleton components: `CardSkeleton`, `ListItemSkeleton`, `ScreenSkeleton`. Use animated `View` with pulsing opacity for loading placeholders
-- [ ] T019 [P] [US1] Create `OfflineBanner.tsx` in `mobile/src/components/` — uses `@react-native-community/netinfo` `useNetInfo()` hook. When `isConnected === false`, show a sticky banner (yellow background, "You are offline" text) at the top with slide-in animation. Hides when back online
-- [ ] T020 [US1] Integrate `OfflineBanner` into `mobile/App.tsx` — render `<OfflineBanner />` inside the `SafeAreaProvider`, above `NavigationContainer`, so it shows app-wide
+- [x] T017 [P] [US1] Create `EmptyState.tsx` in `mobile/src/components/` — reusable component accepting `title: string`, `description: string`, `icon?: string`, `actionLabel?: string`, `onAction?: () => void`. Uses React Native Paper `Text`, `Button`, and `Icon`
+- [x] T018 [P] [US1] Create `LoadingSkeleton.tsx` in `mobile/src/components/` — reusable skeleton components: `CardSkeleton`, `ListItemSkeleton`, `ScreenSkeleton`. Use animated `View` with pulsing opacity for loading placeholders
+- [x] T019 [P] [US1] Create `OfflineBanner.tsx` in `mobile/src/components/` — uses `@react-native-community/netinfo` `useNetInfo()` hook. When `isConnected === false`, show a sticky banner (yellow background, "You are offline" text) at the top with slide-in animation. Hides when back online
+- [x] T020 [US1] Integrate `OfflineBanner` into `mobile/App.tsx` — render `<OfflineBanner />` inside the `SafeAreaProvider`, above `NavigationContainer`, so it shows app-wide
 
 **Checkpoint**: App launches with 5 working tabs, offline banner, empty state, and skeleton components ready. ALL subsequent phases unblocked.
 
