@@ -1,6 +1,6 @@
 /**
  * RTK Query API Configuration
- * 
+ *
  * Base API setup for RTK Query with base URL and endpoints
  */
 
@@ -21,7 +21,7 @@ export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
-    prepareHeaders: (headers, {getState}) => {
+    prepareHeaders: headers => {
       // Add auth token if available
       // const token = (getState() as RootState).auth.token;
       // if (token) {

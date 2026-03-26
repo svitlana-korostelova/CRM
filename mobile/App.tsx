@@ -1,6 +1,6 @@
 /**
  * CRM Mobile Application
- * 
+ *
  * Main entry point for the React Native CRM application
  */
 
@@ -14,6 +14,7 @@ import {store} from './src/store/store';
 import {AppNavigator} from './src/navigation/AppNavigator';
 import {theme} from './src/theme/theme';
 import {databaseService} from './src/database/database';
+import {OfflineBanner} from './src/components/OfflineBanner';
 
 const App: React.FC = () => {
   const [isDatabaseReady, setIsDatabaseReady] = useState(false);
@@ -46,9 +47,14 @@ const App: React.FC = () => {
     <ReduxProvider store={store}>
       <PaperProvider theme={theme}>
         <SafeAreaProvider>
-          <NavigationContainer>
-            <AppNavigator />
-          </NavigationContainer>
+          <View style={styles.appShell}>
+            <OfflineBanner />
+            <View style={styles.navHost}>
+              <NavigationContainer>
+                <AppNavigator />
+              </NavigationContainer>
+            </View>
+          </View>
         </SafeAreaProvider>
       </PaperProvider>
     </ReduxProvider>
@@ -61,6 +67,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f5f5f5',
+  },
+  appShell: {
+    flex: 1,
+  },
+  navHost: {
+    flex: 1,
   },
 });
 

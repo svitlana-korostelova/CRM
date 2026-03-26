@@ -1,0 +1,488 @@
+[
+  {
+    "id": "T021",
+    "parent": "CRM-207",
+    "summary": "T021 [US3] Create SQLite migration `002_create_clients` in `mobile/src/database/` — add migration to the existing `runMigrations()` system in `database.ts`. Create `clients` table with all columns from data-model.md (id, name, email, phone, compan...",
+    "body": "Create SQLite migration `002_create_clients` in `mobile/src/database/` — add migration to the existing `runMigrations()` system in `database.ts`. Create `clients` table with all columns from data-model.md (id, name, email, phone, company, address, avatar_url, notes, tags, is_favorite, created_at, updated_at, synced_at, is_deleted). Add indexes on `name`, `company`, `is_favorite`, `is_deleted`"
+  },
+  {
+    "id": "T022",
+    "parent": "CRM-207",
+    "summary": "T022 [P] [US3] Create `clientsSlice.ts` in `mobile/src/store/slices/` — Redux slice for client UI state: `searchQuery`, `activeFilter` (all/favorites/recent), `selectedClientId`. Actions: `setSearchQuery`, `setActiveFilter`, `setSelectedClient`, `...",
+    "body": "Create `clientsSlice.ts` in `mobile/src/store/slices/` — Redux slice for client UI state: `searchQuery`, `activeFilter` (all/favorites/recent), `selectedClientId`. Actions: `setSearchQuery`, `setActiveFilter`, `setSelectedClient`, `clearFilters`"
+  },
+  {
+    "id": "T023",
+    "parent": "CRM-207",
+    "summary": "T023 [P] [US3] Create `clientsApi.ts` in `mobile/src/store/api/` — RTK Query endpoints using `api.injectEndpoints()`: `getClients` (query, providesTags: ['Client']), `getClient` (query by id), `createClient` (mutation, invalidatesTags), `updateCli...",
+    "body": "Create `clientsApi.ts` in `mobile/src/store/api/` — RTK Query endpoints using `api.injectEndpoints()`: `getClients` (query, providesTags: ['Client']), `getClient` (query by id), `createClient` (mutation, invalidatesTags), `updateClient` (mutation), `deleteClient` (mutation). Matches backend `/api/clients` contract"
+  },
+  {
+    "id": "T024",
+    "parent": "CRM-207",
+    "summary": "T024 [US3] Register `clientsSlice` reducer in `mobile/src/store/store.ts` — add `clients: clientsReducer` to the store configuration",
+    "body": "Register `clientsSlice` reducer in `mobile/src/store/store.ts` — add `clients: clientsReducer` to the store configuration"
+  },
+  {
+    "id": "T025",
+    "parent": "CRM-207",
+    "summary": "T025 [US3] Implement full `ClientListScreen.tsx` in `mobile/src/screens/clients/` — replace placeholder with: React Native Paper `Searchbar` at top, filter chips row (All, Favorites, Recent), `FlatList` of client rows. Each row shows avatar circle...",
+    "body": "Implement full `ClientListScreen.tsx` in `mobile/src/screens/clients/` — replace placeholder with: React Native Paper `Searchbar` at top, filter chips row (All, Favorites, Recent), `FlatList` of client rows. Each row shows avatar circle (initials fallback), name, company, last activity date. FAB button for \"New Client\" that navigates to `ClientForm` with mode `create`. Pull-to-refresh with `RefreshControl`. Load data from SQLite via `databaseService.select()`"
+  },
+  {
+    "id": "T026",
+    "parent": "CRM-207",
+    "summary": "T026 [US3] Implement search and filter logic in `ClientListScreen.tsx` — wire `Searchbar` to filter clients by name/email/phone/company using SQLite `LIKE` queries. Wire filter chips to toggle between all clients, favorites only (`is_favorite = 1`...",
+    "body": "Implement search and filter logic in `ClientListScreen.tsx` — wire `Searchbar` to filter clients by name/email/phone/company using SQLite `LIKE` queries. Wire filter chips to toggle between all clients, favorites only (`is_favorite = 1`), and recently updated (sorted by `updated_at` desc). Use `clientsSlice` actions for state"
+  },
+  {
+    "id": "T027",
+    "parent": "CRM-207",
+    "summary": "T027 [US3] Implement `ClientDetailScreen.tsx` in `mobile/src/screens/clients/` — accepts `clientId` route param. Profile header section with avatar (large, initials fallback), client name, company. Below header: `SegmentedButtons` from React Nativ...",
+    "body": "Implement `ClientDetailScreen.tsx` in `mobile/src/screens/clients/` — accepts `clientId` route param. Profile header section with avatar (large, initials fallback), client name, company. Below header: `SegmentedButtons` from React Native Paper with 4 segments: Info, Notes, Deals, Activity. Render the selected segment's content below. Add \"Edit\" icon button in header that navigates to `ClientForm` with mode `edit`"
+  },
+  {
+    "id": "T028",
+    "parent": "CRM-207",
+    "summary": "T028 [US3] Implement Client Detail — Info tab content in `ClientDetailScreen.tsx` — structured layout showing: phone (tappable via `Linking.openURL('tel:...')`), email (tappable via `Linking.openURL('mailto:...')`), company, address, tags as `Chip...",
+    "body": "Implement Client Detail — Info tab content in `ClientDetailScreen.tsx` — structured layout showing: phone (tappable via `Linking.openURL('tel:...')`), email (tappable via `Linking.openURL('mailto:...')`), company, address, tags as `Chip` components, notes preview, created date. All fields from SQLite"
+  },
+  {
+    "id": "T029",
+    "parent": "CRM-207",
+    "summary": "T029 [US3] Implement Client Detail — Notes tab content in `ClientDetailScreen.tsx` — reverse-chronological `FlatList` of notes linked to this client (query `notes` table by `client_id`). Each note row shows content preview (first 2 lines), date. \"...",
+    "body": "Implement Client Detail — Notes tab content in `ClientDetailScreen.tsx` — reverse-chronological `FlatList` of notes linked to this client (query `notes` table by `client_id`). Each note row shows content preview (first 2 lines), date. \"Add Note\" button at top that navigates to `NoteForm` in Activities stack with `clientId` pre-set. Show empty state if no notes"
+  },
+  {
+    "id": "T030",
+    "parent": "CRM-207",
+    "summary": "T030 [US3] Implement Client Detail — Deals tab content in `ClientDetailScreen.tsx` — `FlatList` of deals linked to this client (query `deals` table by `client_id`). Each deal row shows title, value formatted as currency, stage name as colored badg...",
+    "body": "Implement Client Detail — Deals tab content in `ClientDetailScreen.tsx` — `FlatList` of deals linked to this client (query `deals` table by `client_id`). Each deal row shows title, value formatted as currency, stage name as colored badge, expected close date. Tapping navigates to `DealDetail` in Deals stack. Show empty state if no deals"
+  },
+  {
+    "id": "T031",
+    "parent": "CRM-207",
+    "summary": "T031 [US3] Implement `ClientFormScreen.tsx` in `mobile/src/screens/clients/` — accepts `mode` param (create/edit) and optional `clientId`. Form fields using React Native Paper `TextInput`: name (required, validated), email, phone (keyboardType: ph...",
+    "body": "Implement `ClientFormScreen.tsx` in `mobile/src/screens/clients/` — accepts `mode` param (create/edit) and optional `clientId`. Form fields using React Native Paper `TextInput`: name (required, validated), email, phone (keyboardType: phone-pad), company, address, notes (multiline). On submit: generate UUID, set timestamps, insert/update via `databaseService`. Navigate back on success. Show validation errors inline"
+  },
+  {
+    "id": "T032",
+    "parent": "CRM-207",
+    "summary": "T032 [US3] Register client screens in `ClientsStack.tsx` in `mobile/src/navigation/stacks/` — add `ClientDetail` and `ClientForm` screen entries to the stack navigator with proper `ClientsStackParamList` typing",
+    "body": "Register client screens in `ClientsStack.tsx` in `mobile/src/navigation/stacks/` — add `ClientDetail` and `ClientForm` screen entries to the stack navigator with proper `ClientsStackParamList` typing"
+  },
+  {
+    "id": "T033",
+    "parent": "CRM-207",
+    "summary": "T033 [US3] Implement client list empty state in `ClientListScreen.tsx` — when no clients exist, show `EmptyState` component with icon `account-plus`, title \"No clients yet\", description \"Add your first client to get started\", action button \"Add Cl...",
+    "body": "Implement client list empty state in `ClientListScreen.tsx` — when no clients exist, show `EmptyState` component with icon `account-plus`, title \"No clients yet\", description \"Add your first client to get started\", action button \"Add Client\" that navigates to `ClientForm`. When search returns no results, show different empty state: \"No clients match your search\" with \"Clear Search\" button"
+  },
+  {
+    "id": "T034",
+    "parent": "CRM-207",
+    "summary": "T034 [US3] Implement swipe actions on client list rows in `ClientListScreen.tsx` — swipe-right reveals favorite/unfavorite toggle (star icon), swipe-left reveals call (phone icon) and delete (trash icon) actions. Favorite toggle updates `is_favori...",
+    "body": "Implement swipe actions on client list rows in `ClientListScreen.tsx` — swipe-right reveals favorite/unfavorite toggle (star icon), swipe-left reveals call (phone icon) and delete (trash icon) actions. Favorite toggle updates `is_favorite` in SQLite. Delete sets `is_deleted = 1` (soft delete). Use `Swipeable` from `react-native-gesture-handler`"
+  },
+  {
+    "id": "T035",
+    "parent": "CRM-207",
+    "summary": "T035 [US3] Implement client list pagination in `ClientListScreen.tsx` — load 20 clients per page using `LIMIT/OFFSET` in SQLite query. Implement `onEndReached` on `FlatList` to load next page. Use `getItemLayout` for fixed-height rows (72px). Memo...",
+    "body": "Implement client list pagination in `ClientListScreen.tsx` — load 20 clients per page using `LIMIT/OFFSET` in SQLite query. Implement `onEndReached` on `FlatList` to load next page. Use `getItemLayout` for fixed-height rows (72px). Memoize list items with `React.memo`"
+  },
+  {
+    "id": "T036",
+    "parent": "CRM-208",
+    "summary": "T036 [US4] Create SQLite migration `003_create_pipeline_stages` in `mobile/src/database/` — create `pipeline_stages` table (id, name, position, color, is_won, is_lost) per data-model.md. Seed default stages: Lead (#9E9E9E, pos 0), Qualified (#2196...",
+    "body": "Create SQLite migration `003_create_pipeline_stages` in `mobile/src/database/` — create `pipeline_stages` table (id, name, position, color, is_won, is_lost) per data-model.md. Seed default stages: Lead (#9E9E9E, pos 0), Qualified (#2196F3, pos 1), Proposal (#FF9800, pos 2), Negotiation (#9C27B0, pos 3), Closed Won (#4CAF50, pos 4, is_won=1), Closed Lost (#F44336, pos 5, is_lost=1)"
+  },
+  {
+    "id": "T037",
+    "parent": "CRM-208",
+    "summary": "T037 [US4] Create SQLite migration `004_create_deals` in `mobile/src/database/` — create `deals` table with all columns from data-model.md (id, title, value, stage_id FK, probability, expected_close_date, client_id FK, notes, created_at, updated_a...",
+    "body": "Create SQLite migration `004_create_deals` in `mobile/src/database/` — create `deals` table with all columns from data-model.md (id, title, value, stage_id FK, probability, expected_close_date, client_id FK, notes, created_at, updated_at, synced_at, is_deleted). Add indexes on `client_id`, `stage_id`, `is_deleted`"
+  },
+  {
+    "id": "T038",
+    "parent": "CRM-208",
+    "summary": "T038 [P] [US4] Create `dealsSlice.ts` in `mobile/src/store/slices/` — Redux slice for deal UI state: `viewMode` ('board' | 'list'), `activeFilters` (stage, client, value range, date range), `selectedDealId`. Actions: `setViewMode`, `setFilters`, `...",
+    "body": "Create `dealsSlice.ts` in `mobile/src/store/slices/` — Redux slice for deal UI state: `viewMode` ('board' | 'list'), `activeFilters` (stage, client, value range, date range), `selectedDealId`. Actions: `setViewMode`, `setFilters`, `clearFilters`, `setSelectedDeal`"
+  },
+  {
+    "id": "T039",
+    "parent": "CRM-208",
+    "summary": "T039 [P] [US4] Create `dealsApi.ts` in `mobile/src/store/api/` — RTK Query endpoints: `getDeals`, `getDeal`, `createDeal`, `updateDeal`, `deleteDeal`, `getPipelineStages`. Tags: ['Deal']",
+    "body": "Create `dealsApi.ts` in `mobile/src/store/api/` — RTK Query endpoints: `getDeals`, `getDeal`, `createDeal`, `updateDeal`, `deleteDeal`, `getPipelineStages`. Tags: ['Deal']"
+  },
+  {
+    "id": "T040",
+    "parent": "CRM-208",
+    "summary": "T040 [US4] Register `dealsSlice` reducer in `mobile/src/store/store.ts`",
+    "body": "Register `dealsSlice` reducer in `mobile/src/store/store.ts`"
+  },
+  {
+    "id": "T041",
+    "parent": "CRM-208",
+    "summary": "T041 [P] [US4] Create `DealStageBadge.tsx` in `mobile/src/components/` — accepts `stageName: string` and `color: string`. Renders a small colored badge/chip with the stage name. Used in deal cards, deal detail, and client detail deals tab",
+    "body": "Create `DealStageBadge.tsx` in `mobile/src/components/` — accepts `stageName: string` and `color: string`. Renders a small colored badge/chip with the stage name. Used in deal cards, deal detail, and client detail deals tab"
+  },
+  {
+    "id": "T042",
+    "parent": "CRM-208",
+    "summary": "T042 [P] [US4] Create `ClientPicker.tsx` in `mobile/src/components/` — reusable searchable client picker. Shows `TextInput` that opens a modal/dropdown with client list filtered by query. Returns selected `clientId` and `clientName`. Used in deal ...",
+    "body": "Create `ClientPicker.tsx` in `mobile/src/components/` — reusable searchable client picker. Shows `TextInput` that opens a modal/dropdown with client list filtered by query. Returns selected `clientId` and `clientName`. Used in deal and activity forms"
+  },
+  {
+    "id": "T043",
+    "parent": "CRM-208",
+    "summary": "T043 [US4] Implement `DealPipelineScreen.tsx` in `mobile/src/screens/deals/` — replace placeholder with Kanban board view. Horizontally scrollable `ScrollView` containing vertical `FlatList` columns for each pipeline stage. Each column has a heade...",
+    "body": "Implement `DealPipelineScreen.tsx` in `mobile/src/screens/deals/` — replace placeholder with Kanban board view. Horizontally scrollable `ScrollView` containing vertical `FlatList` columns for each pipeline stage. Each column has a header with stage name (colored) and deal count. Deal cards show: title, value (formatted currency), client name, days in stage. FAB for \"New Deal\". Segmented toggle (Board/List) at top"
+  },
+  {
+    "id": "T044",
+    "parent": "CRM-208",
+    "summary": "T044 [US4] Implement drag-and-drop on deal cards in `DealPipelineScreen.tsx` — long-press on a deal card activates drag mode. Use `react-native-gesture-handler` `PanGestureHandler` or a drag-and-drop library. Dropping card on a different stage col...",
+    "body": "Implement drag-and-drop on deal cards in `DealPipelineScreen.tsx` — long-press on a deal card activates drag mode. Use `react-native-gesture-handler` `PanGestureHandler` or a drag-and-drop library. Dropping card on a different stage column updates `stage_id` in SQLite. Provide haptic feedback via `react-native-haptic-feedback` or `Vibration` API on drop"
+  },
+  {
+    "id": "T045",
+    "parent": "CRM-208",
+    "summary": "T045 [US4] Implement deal list view in `DealPipelineScreen.tsx` — when `viewMode` is 'list', render a `FlatList` with sortable deal rows. Each row shows: title, value, stage badge, client name, expected close date. Tapping row navigates to `DealDe...",
+    "body": "Implement deal list view in `DealPipelineScreen.tsx` — when `viewMode` is 'list', render a `FlatList` with sortable deal rows. Each row shows: title, value, stage badge, client name, expected close date. Tapping row navigates to `DealDetail`. Support sorting by value, stage position, date"
+  },
+  {
+    "id": "T046",
+    "parent": "CRM-208",
+    "summary": "T046 [US4] Implement `DealDetailScreen.tsx` in `mobile/src/screens/deals/` — accepts `dealId` route param. Show: deal title (large), value (prominent), `DealStageBadge` with progress indicator (stage position / total stages), probability %, expect...",
+    "body": "Implement `DealDetailScreen.tsx` in `mobile/src/screens/deals/` — accepts `dealId` route param. Show: deal title (large), value (prominent), `DealStageBadge` with progress indicator (stage position / total stages), probability %, expected close date, linked client (tappable → navigates to `ClientDetail` in Clients stack), notes section, activity log placeholder. \"Edit\" button in header → `DealForm` with mode `edit`"
+  },
+  {
+    "id": "T047",
+    "parent": "CRM-208",
+    "summary": "T047 [US4] Implement `DealFormScreen.tsx` in `mobile/src/screens/deals/` — accepts `mode` param (create/edit), optional `dealId` and `clientId`. Fields: title (required), value (numeric input), stage (picker from `pipeline_stages`), probability (0...",
+    "body": "Implement `DealFormScreen.tsx` in `mobile/src/screens/deals/` — accepts `mode` param (create/edit), optional `dealId` and `clientId`. Fields: title (required), value (numeric input), stage (picker from `pipeline_stages`), probability (0-100 slider or input), expected close date (date picker), client (`ClientPicker` — required), notes (multiline). Save to SQLite on submit"
+  },
+  {
+    "id": "T048",
+    "parent": "CRM-208",
+    "summary": "T048 [US4] Register deal screens in `DealsStack.tsx` in `mobile/src/navigation/stacks/` — add `DealDetail` and `DealForm` screen entries with proper `DealsStackParamList` typing",
+    "body": "Register deal screens in `DealsStack.tsx` in `mobile/src/navigation/stacks/` — add `DealDetail` and `DealForm` screen entries with proper `DealsStackParamList` typing"
+  },
+  {
+    "id": "T049",
+    "parent": "CRM-208",
+    "summary": "T049 [US4] Implement deal pipeline empty states in `DealPipelineScreen.tsx` — when no deals exist at all, show `EmptyState` with \"No deals in your pipeline\" and \"Create your first deal\" button. When individual columns are empty, show subtle \"No de...",
+    "body": "Implement deal pipeline empty states in `DealPipelineScreen.tsx` — when no deals exist at all, show `EmptyState` with \"No deals in your pipeline\" and \"Create your first deal\" button. When individual columns are empty, show subtle \"No deals at this stage\" text within the column"
+  },
+  {
+    "id": "T050",
+    "parent": "CRM-209",
+    "summary": "T050 [US5] Create SQLite migration `005_create_tasks` in `mobile/src/database/` — create `tasks` table per data-model.md (id, title, description, status, priority, due_date, client_id FK, deal_id FK, created_at, updated_at, synced_at, is_deleted)....",
+    "body": "Create SQLite migration `005_create_tasks` in `mobile/src/database/` — create `tasks` table per data-model.md (id, title, description, status, priority, due_date, client_id FK, deal_id FK, created_at, updated_at, synced_at, is_deleted). Add indexes on `status`, `due_date`, `client_id`, `deal_id`, `is_deleted`"
+  },
+  {
+    "id": "T051",
+    "parent": "CRM-209",
+    "summary": "T051 [P] [US5] Create SQLite migration `006_create_call_logs` in `mobile/src/database/` — create `call_logs` table per data-model.md (id, client_id FK NOT NULL, deal_id FK, duration_seconds, outcome, notes, called_at, created_at, synced_at, is_del...",
+    "body": "Create SQLite migration `006_create_call_logs` in `mobile/src/database/` — create `call_logs` table per data-model.md (id, client_id FK NOT NULL, deal_id FK, duration_seconds, outcome, notes, called_at, created_at, synced_at, is_deleted). Add indexes on `client_id`, `called_at`, `is_deleted`"
+  },
+  {
+    "id": "T052",
+    "parent": "CRM-209",
+    "summary": "T052 [P] [US5] Create SQLite migration `007_create_notes` in `mobile/src/database/` — create `notes` table per data-model.md (id, content NOT NULL, client_id FK, deal_id FK, created_at, updated_at, synced_at, is_deleted). Add indexes on `client_id...",
+    "body": "Create SQLite migration `007_create_notes` in `mobile/src/database/` — create `notes` table per data-model.md (id, content NOT NULL, client_id FK, deal_id FK, created_at, updated_at, synced_at, is_deleted). Add indexes on `client_id`, `deal_id`, `is_deleted`"
+  },
+  {
+    "id": "T053",
+    "parent": "CRM-209",
+    "summary": "T053 [P] [US5] Create SQLite migration `008_create_meetings` in `mobile/src/database/` — create `meetings` table per data-model.md (id, title NOT NULL, client_id FK, deal_id FK, location, starts_at NOT NULL, ends_at NOT NULL, notes, created_at, up...",
+    "body": "Create SQLite migration `008_create_meetings` in `mobile/src/database/` — create `meetings` table per data-model.md (id, title NOT NULL, client_id FK, deal_id FK, location, starts_at NOT NULL, ends_at NOT NULL, notes, created_at, updated_at, synced_at, is_deleted). Add indexes on `client_id`, `starts_at`, `is_deleted`"
+  },
+  {
+    "id": "T054",
+    "parent": "CRM-209",
+    "summary": "T054 [US5] Create `activitiesSlice.ts` in `mobile/src/store/slices/` — Redux slice for activity UI state: `activeTypeFilter` (all/task/call/note/meeting), `sortOrder` ('newest'|'oldest'|'due_date'), `viewMode` ('list'|'board'|'calendar'), `dateRan...",
+    "body": "Create `activitiesSlice.ts` in `mobile/src/store/slices/` — Redux slice for activity UI state: `activeTypeFilter` (all/task/call/note/meeting), `sortOrder` ('newest'|'oldest'|'due_date'), `viewMode` ('list'|'board'|'calendar'), `dateRange`. Actions: `setTypeFilter`, `setSortOrder`, `setViewMode`, `setDateRange`"
+  },
+  {
+    "id": "T055",
+    "parent": "CRM-209",
+    "summary": "T055 [P] [US5] Create `activitiesApi.ts` in `mobile/src/store/api/` — RTK Query endpoints: `getTasks`, `createTask`, `updateTask`, `deleteTask`, `getCallLogs`, `createCallLog`, `getNotes`, `createNote`, `updateNote`, `getMeetings`, `createMeeting`...",
+    "body": "Create `activitiesApi.ts` in `mobile/src/store/api/` — RTK Query endpoints: `getTasks`, `createTask`, `updateTask`, `deleteTask`, `getCallLogs`, `createCallLog`, `getNotes`, `createNote`, `updateNote`, `getMeetings`, `createMeeting`, `updateMeeting`. Tags: ['Task', 'CallLog', 'Note', 'Meeting']"
+  },
+  {
+    "id": "T056",
+    "parent": "CRM-209",
+    "summary": "T056 [US5] Register `activitiesSlice` reducer in `mobile/src/store/store.ts`",
+    "body": "Register `activitiesSlice` reducer in `mobile/src/store/store.ts`"
+  },
+  {
+    "id": "T057",
+    "parent": "CRM-209",
+    "summary": "T057 [US5] Implement full `ActivityListScreen.tsx` in `mobile/src/screens/activities/` — replace placeholder with: filter chips row (All, Tasks, Calls, Notes, Meetings) at top, reverse-chronological `FlatList` of all activities. Each row shows: ty...",
+    "body": "Implement full `ActivityListScreen.tsx` in `mobile/src/screens/activities/` — replace placeholder with: filter chips row (All, Tasks, Calls, Notes, Meetings) at top, reverse-chronological `FlatList` of all activities. Each row shows: type icon (Material Community Icons: `checkbox-marked-outline` for task, `phone` for call, `note-text` for note, `calendar-clock` for meeting), title/summary, linked client name, date/time. Query all 4 activity tables from SQLite, merge and sort by date. FAB for adding new activity"
+  },
+  {
+    "id": "T058",
+    "parent": "CRM-209",
+    "summary": "T058 [US5] Implement filters and sorting in `ActivityListScreen.tsx` — wire filter chips to `activitiesSlice` `activeTypeFilter`. When a type is selected, query only that table. Add sort dropdown: newest first, oldest first, due date (tasks only)....",
+    "body": "Implement filters and sorting in `ActivityListScreen.tsx` — wire filter chips to `activitiesSlice` `activeTypeFilter`. When a type is selected, query only that table. Add sort dropdown: newest first, oldest first, due date (tasks only). Add date range filter. Combine with SQLite WHERE clauses"
+  },
+  {
+    "id": "T059",
+    "parent": "CRM-209",
+    "summary": "T059 [US5] Implement activity list empty states in `ActivityListScreen.tsx` — type-specific: no activities → \"No activities yet — start by logging a call or creating a task\", no tasks → \"No tasks — create one to get organized\", no calls → \"No call...",
+    "body": "Implement activity list empty states in `ActivityListScreen.tsx` — type-specific: no activities → \"No activities yet — start by logging a call or creating a task\", no tasks → \"No tasks — create one to get organized\", no calls → \"No calls logged — tap + to log your first call\", no notes → \"No notes yet\", no meetings → \"No meetings scheduled\". Use `EmptyState` component"
+  },
+  {
+    "id": "T060",
+    "parent": "CRM-209",
+    "summary": "T060 [US5] Implement `TaskBoardScreen.tsx` in `mobile/src/screens/activities/` — Kanban board with 3 columns: To Do, In Progress, Done. Task cards show: title, due date (red if overdue), priority indicator (colored left border: green=low, orange=m...",
+    "body": "Implement `TaskBoardScreen.tsx` in `mobile/src/screens/activities/` — Kanban board with 3 columns: To Do, In Progress, Done. Task cards show: title, due date (red if overdue), priority indicator (colored left border: green=low, orange=medium, red=high), linked client name. Drag-and-drop between columns updates `status` in SQLite. Navigate to board via filter chips or view toggle from `ActivityListScreen`"
+  },
+  {
+    "id": "T061",
+    "parent": "CRM-209",
+    "summary": "T061 [US5] Implement overdue task indicators in `TaskBoardScreen.tsx` and `ActivityListScreen.tsx` — tasks with `due_date` before today get red border/badge. Sort overdue tasks to top in list view. Show overdue count badge on the \"Tasks\" filter chip",
+    "body": "Implement overdue task indicators in `TaskBoardScreen.tsx` and `ActivityListScreen.tsx` — tasks with `due_date` before today get red border/badge. Sort overdue tasks to top in list view. Show overdue count badge on the \"Tasks\" filter chip"
+  },
+  {
+    "id": "T062",
+    "parent": "CRM-209",
+    "summary": "T062 [US5] Implement `TaskFormScreen.tsx` in `mobile/src/screens/activities/` — accepts `mode` (create/edit), optional `taskId`, `clientId`, `dealId`. Fields: title (required), description (multiline), status picker (To Do/In Progress/Done), prior...",
+    "body": "Implement `TaskFormScreen.tsx` in `mobile/src/screens/activities/` — accepts `mode` (create/edit), optional `taskId`, `clientId`, `dealId`. Fields: title (required), description (multiline), status picker (To Do/In Progress/Done), priority picker (Low/Medium/High), due date (date picker), client (`ClientPicker`), deal (picker filtered by selected client). Save to SQLite `tasks` table"
+  },
+  {
+    "id": "T063",
+    "parent": "CRM-209",
+    "summary": "T063 [P] [US5] Implement `CallLogFormScreen.tsx` in `mobile/src/screens/activities/` — fields: client (`ClientPicker`, required), duration (minutes numeric input), outcome (radio buttons: Connected, Voicemail, No Answer, Left Message), deal (optio...",
+    "body": "Implement `CallLogFormScreen.tsx` in `mobile/src/screens/activities/` — fields: client (`ClientPicker`, required), duration (minutes numeric input), outcome (radio buttons: Connected, Voicemail, No Answer, Left Message), deal (optional picker), notes (multiline). On submit: set `called_at` to current time, save to SQLite `call_logs` table"
+  },
+  {
+    "id": "T064",
+    "parent": "CRM-209",
+    "summary": "T064 [P] [US5] Implement `NoteFormScreen.tsx` in `mobile/src/screens/activities/` — accepts `mode` (create/edit), optional `noteId`, `clientId`, `dealId`. Fields: content (multiline, required, large text area), client (`ClientPicker`), deal (picke...",
+    "body": "Implement `NoteFormScreen.tsx` in `mobile/src/screens/activities/` — accepts `mode` (create/edit), optional `noteId`, `clientId`, `dealId`. Fields: content (multiline, required, large text area), client (`ClientPicker`), deal (picker). Auto-save draft to AsyncStorage on text change (debounced 2s) to prevent data loss. Save to SQLite `notes` table"
+  },
+  {
+    "id": "T065",
+    "parent": "CRM-209",
+    "summary": "T065 [P] [US5] Implement `MeetingFormScreen.tsx` in `mobile/src/screens/activities/` — accepts `mode` (create/edit), optional `meetingId`, `clientId`, `dealId`. Fields: title (required), client (`ClientPicker`), deal (picker), location, start date...",
+    "body": "Implement `MeetingFormScreen.tsx` in `mobile/src/screens/activities/` — accepts `mode` (create/edit), optional `meetingId`, `clientId`, `dealId`. Fields: title (required), client (`ClientPicker`), deal (picker), location, start date/time (datetime picker), end date/time (datetime picker, must be after start), notes (multiline). Save to SQLite `meetings` table"
+  },
+  {
+    "id": "T066",
+    "parent": "CRM-209",
+    "summary": "T066 [US5] Implement `CalendarScreen.tsx` in `mobile/src/screens/activities/` — month view calendar at top (custom grid or lightweight library). Days with activities show colored dots (color per type). Tapping a day shows that day's activities in ...",
+    "body": "Implement `CalendarScreen.tsx` in `mobile/src/screens/activities/` — month view calendar at top (custom grid or lightweight library). Days with activities show colored dots (color per type). Tapping a day shows that day's activities in a `FlatList` below the calendar. Each activity row shows type icon, title, time, linked client. Navigate to detail/form on tap"
+  },
+  {
+    "id": "T067",
+    "parent": "CRM-209",
+    "summary": "T067 [US5] Register all activity screens in `ActivitiesStack.tsx` in `mobile/src/navigation/stacks/` — add `TaskBoard`, `TaskDetail` (reuses TaskForm in read-only or add separate screen), `TaskForm`, `CallLogForm`, `NoteForm`, `MeetingForm`, `Cale...",
+    "body": "Register all activity screens in `ActivitiesStack.tsx` in `mobile/src/navigation/stacks/` — add `TaskBoard`, `TaskDetail` (reuses TaskForm in read-only or add separate screen), `TaskForm`, `CallLogForm`, `NoteForm`, `MeetingForm`, `Calendar` screen entries with proper `ActivitiesStackParamList` typing"
+  },
+  {
+    "id": "T068",
+    "parent": "CRM-210",
+    "summary": "T068 [P] [US2] Create `SummaryCard.tsx` in `mobile/src/components/` — accepts `icon: string`, `label: string`, `value: string | number`, `color: string`, `onPress: () => void`. Renders a React Native Paper `Card` with icon, label, and large value ...",
+    "body": "Create `SummaryCard.tsx` in `mobile/src/components/` — accepts `icon: string`, `label: string`, `value: string | number`, `color: string`, `onPress: () => void`. Renders a React Native Paper `Card` with icon, label, and large value text. Tappable to navigate"
+  },
+  {
+    "id": "T069",
+    "parent": "CRM-210",
+    "summary": "T069 [US2] Implement full `DashboardScreen.tsx` in `mobile/src/screens/dashboard/` — replace placeholder with `ScrollView` layout containing: (1) horizontal row of 4 `SummaryCard` components (Total Clients, Active Deals, Pipeline Value, Open Tasks...",
+    "body": "Implement full `DashboardScreen.tsx` in `mobile/src/screens/dashboard/` — replace placeholder with `ScrollView` layout containing: (1) horizontal row of 4 `SummaryCard` components (Total Clients, Active Deals, Pipeline Value, Open Tasks), (2) \"Today's Agenda\" section, (3) \"Recent Activity\" section. Add `RefreshControl` for pull-to-refresh that re-queries SQLite"
+  },
+  {
+    "id": "T070",
+    "parent": "CRM-210",
+    "summary": "T070 [US2] Implement summary metric cards data in `DashboardScreen.tsx` — query SQLite aggregates: `SELECT COUNT(*) FROM clients WHERE is_deleted=0`, `SELECT COUNT(*) FROM deals WHERE is_deleted=0 AND stage_id NOT IN (won/lost stages)`, `SELECT SU...",
+    "body": "Implement summary metric cards data in `DashboardScreen.tsx` — query SQLite aggregates: `SELECT COUNT(*) FROM clients WHERE is_deleted=0`, `SELECT COUNT(*) FROM deals WHERE is_deleted=0 AND stage_id NOT IN (won/lost stages)`, `SELECT SUM(value) FROM deals WHERE is_deleted=0 AND stage_id NOT IN (won/lost stages)`, `SELECT COUNT(*) FROM tasks WHERE is_deleted=0 AND status != 'done'`. Tapping each card navigates to relevant tab"
+  },
+  {
+    "id": "T071",
+    "parent": "CRM-210",
+    "summary": "T071 [US2] Implement today's agenda section in `DashboardScreen.tsx` — query tasks due today (`due_date = today AND status != 'done'`) and meetings today (`starts_at between today start/end`). Render as vertical list with time, title, linked clien...",
+    "body": "Implement today's agenda section in `DashboardScreen.tsx` — query tasks due today (`due_date = today AND status != 'done'`) and meetings today (`starts_at between today start/end`). Render as vertical list with time, title, linked client. Tapping navigates to task/meeting detail. Show \"Nothing scheduled for today\" if empty"
+  },
+  {
+    "id": "T072",
+    "parent": "CRM-210",
+    "summary": "T072 [US2] Implement recent activity feed in `DashboardScreen.tsx` — query last 10 entries across all activity tables (tasks, call_logs, notes, meetings) plus new clients, sorted by `created_at` desc. Each entry shows type icon, description (\"Logg...",
+    "body": "Implement recent activity feed in `DashboardScreen.tsx` — query last 10 entries across all activity tables (tasks, call_logs, notes, meetings) plus new clients, sorted by `created_at` desc. Each entry shows type icon, description (\"Logged call with {client}\"), relative timestamp. Tapping navigates to entity detail"
+  },
+  {
+    "id": "T073",
+    "parent": "CRM-210",
+    "summary": "T073 [US2] Implement `QuickActionSheet.tsx` in `mobile/src/components/` — bottom sheet (or React Native Paper `Modal` with bottom sheet style) with 4 options: New Client (icon: account-plus), New Deal (icon: handshake), Log Call (icon: phone-plus)...",
+    "body": "Implement `QuickActionSheet.tsx` in `mobile/src/components/` — bottom sheet (or React Native Paper `Modal` with bottom sheet style) with 4 options: New Client (icon: account-plus), New Deal (icon: handshake), Log Call (icon: phone-plus), New Task (icon: checkbox-marked-outline). Each option navigates to the appropriate form screen. Used by Dashboard FAB"
+  },
+  {
+    "id": "T074",
+    "parent": "CRM-210",
+    "summary": "T074 [US2] Add FAB.Group to `DashboardScreen.tsx` — React Native Paper `FAB.Group` that opens to show quick action buttons. Connect to `QuickActionSheet` or directly expand with 4 sub-FABs for New Client, New Deal, Log Call, New Task",
+    "body": "Add FAB.Group to `DashboardScreen.tsx` — React Native Paper `FAB.Group` that opens to show quick action buttons. Connect to `QuickActionSheet` or directly expand with 4 sub-FABs for New Client, New Deal, Log Call, New Task"
+  },
+  {
+    "id": "T075",
+    "parent": "CRM-210",
+    "summary": "T075 [US2] Implement dashboard empty state in `DashboardScreen.tsx` — when no clients, deals, or activities exist, replace the normal layout with `EmptyState`: icon `rocket-launch`, title \"Welcome to CRM!\", description \"Get started by adding your ...",
+    "body": "Implement dashboard empty state in `DashboardScreen.tsx` — when no clients, deals, or activities exist, replace the normal layout with `EmptyState`: icon `rocket-launch`, title \"Welcome to CRM!\", description \"Get started by adding your first client\", action button \"Add Client\" navigating to ClientForm"
+  },
+  {
+    "id": "T076",
+    "parent": "CRM-211",
+    "summary": "T076 [US6] Create `InteractionTimeline.tsx` in `mobile/src/components/` — reusable component accepting `clientId?: string`, `dealId?: string`. Queries SQLite across tasks, call_logs, notes, meetings filtered by the given ID. Renders a vertical tim...",
+    "body": "Create `InteractionTimeline.tsx` in `mobile/src/components/` — reusable component accepting `clientId?: string`, `dealId?: string`. Queries SQLite across tasks, call_logs, notes, meetings filtered by the given ID. Renders a vertical timeline with: left line connector, type-specific icon circles (colored per type), entry content (title/summary, timestamp, linked entity). Sorted reverse-chronological. Supports pagination (load 20 at a time)"
+  },
+  {
+    "id": "T077",
+    "parent": "CRM-211",
+    "summary": "T077 [US6] Integrate `InteractionTimeline` into `ClientDetailScreen.tsx` Activity tab — replace placeholder activity content with `<InteractionTimeline clientId={clientId} />`. Shows all activities for that client",
+    "body": "Integrate `InteractionTimeline` into `ClientDetailScreen.tsx` Activity tab — replace placeholder activity content with `<InteractionTimeline clientId={clientId} />`. Shows all activities for that client"
+  },
+  {
+    "id": "T078",
+    "parent": "CRM-211",
+    "summary": "T078 [US6] Integrate `InteractionTimeline` into `DealDetailScreen.tsx` activity log section — add `<InteractionTimeline dealId={dealId} />` below the deal info section. Shows activities linked to that deal",
+    "body": "Integrate `InteractionTimeline` into `DealDetailScreen.tsx` activity log section — add `<InteractionTimeline dealId={dealId} />` below the deal info section. Shows activities linked to that deal"
+  },
+  {
+    "id": "T079",
+    "parent": "CRM-211",
+    "summary": "T079 [US6] Add quick note input to `InteractionTimeline.tsx` — add a `TextInput` at the top of the timeline with \"Add a quick note...\" placeholder. On submit, insert a new note in SQLite linked to the current `clientId`/`dealId`. New note appears ...",
+    "body": "Add quick note input to `InteractionTimeline.tsx` — add a `TextInput` at the top of the timeline with \"Add a quick note...\" placeholder. On submit, insert a new note in SQLite linked to the current `clientId`/`dealId`. New note appears at top of timeline. Clears input after submit"
+  },
+  {
+    "id": "T080",
+    "parent": "CRM-211",
+    "summary": "T080 [US6] Add communication count badges to `ClientListScreen.tsx` and `ClientDetailScreen.tsx` — on list rows: show small badge with total interaction count. On detail header: show counts for calls, notes, meetings as small text below client inf...",
+    "body": "Add communication count badges to `ClientListScreen.tsx` and `ClientDetailScreen.tsx` — on list rows: show small badge with total interaction count. On detail header: show counts for calls, notes, meetings as small text below client info. Query with `SELECT COUNT(*) FROM {table} WHERE client_id = ? AND is_deleted = 0` for each"
+  },
+  {
+    "id": "T081",
+    "parent": "CRM-212",
+    "summary": "T081 [US7] Implement `ReportsHubScreen.tsx` in `mobile/src/screens/more/` — list of report cards using React Native Paper `Card`: Pipeline Report (icon: chart-bar, preview: total pipeline value), Activity Report (icon: chart-timeline-variant, prev...",
+    "body": "Implement `ReportsHubScreen.tsx` in `mobile/src/screens/more/` — list of report cards using React Native Paper `Card`: Pipeline Report (icon: chart-bar, preview: total pipeline value), Activity Report (icon: chart-timeline-variant, preview: activities this week), Client Report (icon: account-group, preview: total clients). Tapping navigates to respective report screen"
+  },
+  {
+    "id": "T082",
+    "parent": "CRM-212",
+    "summary": "T082 [US7] Implement `PipelineReportScreen.tsx` in `mobile/src/screens/more/` — bar chart showing deal values summed by stage. Below chart: deal count per stage, total pipeline value, win/loss ratio (closed-won count / total closed), average deal ...",
+    "body": "Implement `PipelineReportScreen.tsx` in `mobile/src/screens/more/` — bar chart showing deal values summed by stage. Below chart: deal count per stage, total pipeline value, win/loss ratio (closed-won count / total closed), average deal size. Time period filter chips (This Week, Month, Quarter, Year). Use a lightweight React Native charting library or custom `View`-based bars"
+  },
+  {
+    "id": "T083",
+    "parent": "CRM-212",
+    "summary": "T083 [US7] Implement `ActivityReportScreen.tsx` in `mobile/src/screens/more/` — stacked bar chart of activity counts by type (tasks, calls, notes, meetings) per week or month. Below chart: total counts per type, trend indicator (up/down arrow comp...",
+    "body": "Implement `ActivityReportScreen.tsx` in `mobile/src/screens/more/` — stacked bar chart of activity counts by type (tasks, calls, notes, meetings) per week or month. Below chart: total counts per type, trend indicator (up/down arrow comparing current period vs previous). Time period filter"
+  },
+  {
+    "id": "T084",
+    "parent": "CRM-212",
+    "summary": "T084 [US7] Implement `ClientReportScreen.tsx` in `mobile/src/screens/more/` — new clients over time (bar chart by month), clients by tag (if tags used), most active clients (top 10 by total interaction count). Simple list + bar chart format",
+    "body": "Implement `ClientReportScreen.tsx` in `mobile/src/screens/more/` — new clients over time (bar chart by month), clients by tag (if tags used), most active clients (top 10 by total interaction count). Simple list + bar chart format"
+  },
+  {
+    "id": "T085",
+    "parent": "CRM-212",
+    "summary": "T085 [US7] Register report screens in `MoreStack.tsx` — add `ReportsHub`, `PipelineReport`, `ActivityReport`, `ClientReport` entries with `MoreStackParamList` typing",
+    "body": "Register report screens in `MoreStack.tsx` — add `ReportsHub`, `PipelineReport`, `ActivityReport`, `ClientReport` entries with `MoreStackParamList` typing"
+  },
+  {
+    "id": "T086",
+    "parent": "CRM-213",
+    "summary": "T086 [US8] Create SQLite migration `009_create_search_history` in `mobile/src/database/` — create `search_history` table (id, query, searched_at) per data-model.md",
+    "body": "Create SQLite migration `009_create_search_history` in `mobile/src/database/` — create `search_history` table (id, query, searched_at) per data-model.md"
+  },
+  {
+    "id": "T087",
+    "parent": "CRM-213",
+    "summary": "T087 [US8] Create `searchSlice.ts` in `mobile/src/store/slices/` — Redux slice: `query`, `recentSearches`, `isSearching`. Actions: `setQuery`, `addRecentSearch`, `clearRecentSearches`, `removeRecentSearch`. Register in `store.ts`",
+    "body": "Create `searchSlice.ts` in `mobile/src/store/slices/` — Redux slice: `query`, `recentSearches`, `isSearching`. Actions: `setQuery`, `addRecentSearch`, `clearRecentSearches`, `removeRecentSearch`. Register in `store.ts`"
+  },
+  {
+    "id": "T088",
+    "parent": "CRM-213",
+    "summary": "T088 [US8] Implement `GlobalSearchScreen.tsx` in `mobile/src/screens/search/` — modal screen with `Searchbar` auto-focused on open. When query is empty, show recent searches from `search_history` table (last 10, with clear all button). As user typ...",
+    "body": "Implement `GlobalSearchScreen.tsx` in `mobile/src/screens/search/` — modal screen with `Searchbar` auto-focused on open. When query is empty, show recent searches from `search_history` table (last 10, with clear all button). As user types (debounced 300ms), query SQLite across: `clients` (name, email, company LIKE), `deals` (title LIKE), `tasks` (title LIKE), `notes` (content LIKE). Group results by type with `SectionList` section headers. Tapping a result saves to search history and navigates to detail screen"
+  },
+  {
+    "id": "T089",
+    "parent": "CRM-213",
+    "summary": "T089 [US8] Register `GlobalSearch` as modal screen in root navigator in `mobile/src/navigation/AppNavigator.tsx` — ensure the `GlobalSearch` screen is registered in `RootStackParamList` with `presentation: 'modal'`. Add a search icon button to the...",
+    "body": "Register `GlobalSearch` as modal screen in root navigator in `mobile/src/navigation/AppNavigator.tsx` — ensure the `GlobalSearch` screen is registered in `RootStackParamList` with `presentation: 'modal'`. Add a search icon button to the default screen options header that navigates to `GlobalSearch`"
+  },
+  {
+    "id": "T090",
+    "parent": "CRM-214",
+    "summary": "T090 [US9] Implement full `MoreMenuScreen.tsx` in `mobile/src/screens/more/` — replace placeholder with a `ScrollView` of menu items using React Native Paper `List.Item`. Sections: CRM (Reports → `ReportsHub`), App (Settings → `Settings`, Profile ...",
+    "body": "Implement full `MoreMenuScreen.tsx` in `mobile/src/screens/more/` — replace placeholder with a `ScrollView` of menu items using React Native Paper `List.Item`. Sections: CRM (Reports → `ReportsHub`), App (Settings → `Settings`, Profile → `Profile`), Info (About → `About`). Each item has icon and chevron"
+  },
+  {
+    "id": "T091",
+    "parent": "CRM-214",
+    "summary": "T091 [US9] Implement `SettingsScreen.tsx` in `mobile/src/screens/more/` — sections: Preferences (theme toggle light/dark using `react-native-paper` theme, notification preferences toggle), Data & Sync (last sync time display, pending changes count...",
+    "body": "Implement `SettingsScreen.tsx` in `mobile/src/screens/more/` — sections: Preferences (theme toggle light/dark using `react-native-paper` theme, notification preferences toggle), Data & Sync (last sync time display, pending changes count from sync queue, \"Sync Now\" button that triggers background sync, \"Clear Cache\" with confirmation dialog showing cache size)"
+  },
+  {
+    "id": "T092",
+    "parent": "CRM-214",
+    "summary": "T092 [US9] Implement `SyncStatusScreen.tsx` in `mobile/src/screens/more/` — detailed sync view: list of pending operations (entity type, operation type, timestamp), last successful sync timestamp, sync error log (last 10 errors), manual \"Sync Now\"...",
+    "body": "Implement `SyncStatusScreen.tsx` in `mobile/src/screens/more/` — detailed sync view: list of pending operations (entity type, operation type, timestamp), last successful sync timestamp, sync error log (last 10 errors), manual \"Sync Now\" trigger. Accessible from Settings Data & Sync section"
+  },
+  {
+    "id": "T093",
+    "parent": "CRM-214",
+    "summary": "T093 [P] [US9] Implement `ProfileScreen.tsx` in `mobile/src/screens/more/` — read-only display of user info: name, email, role. Use React Native Paper `Avatar.Text` with initials, `List.Item` for info fields. Note at bottom: \"Account settings will...",
+    "body": "Implement `ProfileScreen.tsx` in `mobile/src/screens/more/` — read-only display of user info: name, email, role. Use React Native Paper `Avatar.Text` with initials, `List.Item` for info fields. Note at bottom: \"Account settings will be available after sign-in is implemented\""
+  },
+  {
+    "id": "T094",
+    "parent": "CRM-214",
+    "summary": "T094 [P] [US9] Implement `AboutScreen.tsx` in `mobile/src/screens/more/` — app name, version (from `package.json`), build number, \"Open Source Licenses\" link, support email link (via `Linking.openURL`). Use React Native Paper `List.Item` components",
+    "body": "Implement `AboutScreen.tsx` in `mobile/src/screens/more/` — app name, version (from `package.json`), build number, \"Open Source Licenses\" link, support email link (via `Linking.openURL`). Use React Native Paper `List.Item` components"
+  },
+  {
+    "id": "T095",
+    "parent": "CRM-214",
+    "summary": "T095 [US9] Register all More screens in `MoreStack.tsx` — add `Settings`, `SyncStatus`, `Profile`, `About` entries (ReportsHub already added in Phase 8) with proper `MoreStackParamList` typing",
+    "body": "Register all More screens in `MoreStack.tsx` — add `Settings`, `SyncStatus`, `Profile`, `About` entries (ReportsHub already added in Phase 8) with proper `MoreStackParamList` typing"
+  },
+  {
+    "id": "T096",
+    "parent": "CRM-215",
+    "summary": "T096 [P] Implement standardized pull-to-refresh across all list screens — ensure `ClientListScreen`, `DealPipelineScreen`, `ActivityListScreen`, `DashboardScreen` all use `RefreshControl` with theme accent color. Refresh triggers: (1) re-query SQL...",
+    "body": "Implement standardized pull-to-refresh across all list screens — ensure `ClientListScreen`, `DealPipelineScreen`, `ActivityListScreen`, `DashboardScreen` all use `RefreshControl` with theme accent color. Refresh triggers: (1) re-query SQLite, (2) attempt background sync via RTK Query if online"
+  },
+  {
+    "id": "T097",
+    "parent": "CRM-215",
+    "summary": "T097 [P] Add loading skeletons to all data screens — replace `ActivityIndicator` spinners with `LoadingSkeleton` component in: `DashboardScreen` (card skeletons), `ClientListScreen` (list item skeletons), `DealPipelineScreen` (card skeletons), `Ac...",
+    "body": "Add loading skeletons to all data screens — replace `ActivityIndicator` spinners with `LoadingSkeleton` component in: `DashboardScreen` (card skeletons), `ClientListScreen` (list item skeletons), `DealPipelineScreen` (card skeletons), `ActivityListScreen` (list item skeletons), `ReportsHubScreen` (card skeletons)"
+  },
+  {
+    "id": "T098",
+    "parent": "CRM-215",
+    "summary": "T098 Audit all form screens for draft preservation — ensure `ClientFormScreen`, `DealFormScreen`, `TaskFormScreen`, `NoteFormScreen`, `MeetingFormScreen` preserve input when user accidentally navigates back. Use `beforeRemove` navigation listener ...",
+    "body": "Audit all form screens for draft preservation — ensure `ClientFormScreen`, `DealFormScreen`, `TaskFormScreen`, `NoteFormScreen`, `MeetingFormScreen` preserve input when user accidentally navigates back. Use `beforeRemove` navigation listener to show \"Discard changes?\" confirmation dialog when form is dirty"
+  },
+  {
+    "id": "T099",
+    "parent": "CRM-215",
+    "summary": "T099 [P] Performance audit on list screens — verify `FlatList` in `ClientListScreen`, `ActivityListScreen`, `DealPipelineScreen` use `React.memo` on row components, `keyExtractor`, and `getItemLayout` where applicable. Ensure SQLite queries use in...",
+    "body": "Performance audit on list screens — verify `FlatList` in `ClientListScreen`, `ActivityListScreen`, `DealPipelineScreen` use `React.memo` on row components, `keyExtractor`, and `getItemLayout` where applicable. Ensure SQLite queries use indexes defined in data-model.md"
+  },
+  {
+    "id": "T100",
+    "parent": "CRM-215",
+    "summary": "T100 [P] Accessibility audit — ensure all interactive elements have `accessibilityLabel`, minimum 44px touch targets, proper contrast ratios on text. Verify VoiceOver works on tab navigation and form inputs",
+    "body": "Accessibility audit — ensure all interactive elements have `accessibilityLabel`, minimum 44px touch targets, proper contrast ratios on text. Verify VoiceOver works on tab navigation and form inputs"
+  },
+  {
+    "id": "T101",
+    "parent": "CRM-215",
+    "summary": "T101 Run full app verification — start Metro bundler, launch on iOS simulator, navigate through all tabs, create sample data (3 clients, 2 deals, 5 activities), verify all screens render correctly, verify offline banner appears when airplane mode ...",
+    "body": "Run full app verification — start Metro bundler, launch on iOS simulator, navigate through all tabs, create sample data (3 clients, 2 deals, 5 activities), verify all screens render correctly, verify offline banner appears when airplane mode enabled, verify data persists after app restart"
+  }
+]

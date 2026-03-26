@@ -1,4 +1,4 @@
-import type {Priority, TaskStatus} from '@/navigation/types';
+import type {Priority, TaskStatus} from '../../navigation/types';
 
 /**
  * Row shape for the `tasks` SQLite table (see data-model.md).
